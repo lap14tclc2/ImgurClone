@@ -7,8 +7,9 @@ const path = require('path'),
     cookieParser = require('cookie-parser'),
     morgan = require('morgan'),
     methodOverride = require('method-override'),
-    errorHandler = require('errorhandler');
-
+    errorHandler = require('errorhandler'),
+    moment = require('moment');
+    
 module.exports = app => {
     // explain included  at Page 130 in book
 
@@ -29,7 +30,12 @@ module.exports = app => {
     app.engine('handlebars',expressHandleBars.create({
         defaultLayout: 'main',
         layoutsDir: `${app.get('views')}/layouts`,
-        partialsDir: [`${app.get('views')}/partials`]
+        partialsDir: [`${app.get('views')}/partials`],
+        helpers: {
+            timeago: timestamp => {
+                return moment(timestamp).startOf('minute').fromNow();
+            }
+        }
     }).engine);
     app.set('View engine','handlebars')
     return app;
